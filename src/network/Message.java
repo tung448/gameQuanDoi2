@@ -9,8 +9,10 @@ import java.io.IOException;
 public class Message {
 
     private byte command;
+    //
     private ByteArrayOutputStream os;
     private DataOutputStream dos;
+
     private ByteArrayInputStream is;
     private DataInputStream dis;
 
@@ -20,14 +22,12 @@ public class Message {
     
     public Message(byte command) {
         this.command = command;
-        os = new ByteArrayOutputStream();
-        dos = new DataOutputStream(os);
+        dos = new DataOutputStream(new ByteArrayOutputStream());
     }
 
     public Message(byte command, byte[] data) {
         this.command = command;
-        is = new ByteArrayInputStream(data);
-        dis = new DataInputStream(is);
+        dis = new DataInputStream(new ByteArrayInputStream(data));
     }
     
     public byte getCommand() {

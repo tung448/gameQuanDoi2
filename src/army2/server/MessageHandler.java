@@ -105,7 +105,9 @@ public class MessageHandler implements IMessageHandler {
 
                     // Login
                     case 1:
-                        if(client.user == null)
+                        System.out.println("LOGIN");
+                        String userS = mss.reader().readUTF().trim();
+//                        if(client.user == null)
                             client.loginMessage(mss);
                         break;
 

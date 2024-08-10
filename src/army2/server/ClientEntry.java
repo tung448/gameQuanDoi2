@@ -54,13 +54,16 @@ public class ClientEntry implements ISession {
         public void run() {
             try {
                 while(true) {
+                    System.out.println("get mess1");
                     Message message = readMessage();
                   //  System.out.println(message.toString());
                     if(message != null) {
+                        System.out.println("get mess not null");
                         ServerManager.log(ClientEntry.this.toString()+" send mss "+message.getCommand());
-                        messageHandler.onMessage(message);
+                        messageHandler.onMessage(message); // thực hiện API
                         message.cleanup();
                     } else
+                        System.out.println("get mess stop");
                         break;
                 }
             } catch(Exception ex) {
@@ -77,7 +80,10 @@ public class ClientEntry implements ISession {
 
         private Message readMessage() throws Exception {
             // read message command
+            System.out.println("start read mss");
             byte cmd = dis.readByte();
+            System.out.println("cmd readByte " + cmd);
+
             if(connected)
                 cmd = readKey(cmd);
             // read size of data
@@ -88,19 +94,28 @@ public class ClientEntry implements ISession {
                 size = (readKey(b1) & 0xff) << 8 | readKey(b2) & 0xff;
             } else
                 size = dis.readUnsignedShort();
+            System.out.println("size: " + size);
+
             byte data[] = new byte[size];
             int len = 0;
             int byteRead = 0;
             while(len != -1 && byteRead < size) {
+                System.out.println("a");
                 len = dis.read(data, byteRead, size - byteRead);
+                System.out.println(len);
                 if(len > 0)
                     byteRead += len;
             }
+            System.out.println("out");
 //            recvByteCount += (5 + byteRead);
             if(connected)
                 for(int i = 0; i < data.length; i++) {
+                    System.out.println("bbbb");
                     data[i] = readKey(data[i]);
                 }
+
+            System.out.println("connected" + connected);
+            System.out.println("Data: " + new String(data));
             Message msg = new Message(cmd, data);
             return msg;
         }
